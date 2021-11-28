@@ -42,11 +42,16 @@ AC_CHECK_TOOL(AR, ar)
 
 AC_C_BIGENDIAN
 
-AC_CHECK_LIB(ncurses, tputs, [TERMCAPLIB=-lncurses], [TERMCAPLIB=-lcurses])
-dnl if test "$TERMCAPLIB" != "-ltermcap"; then
-dnl    AC_CHECK_LIB(termcap, tputs, [TERMCAPLIB=-ltermcap], [TERMCAPLIB=-lncurses])
-dnl 
-AC_SUBST(TERMCAPLIB)
+_old_libs=$LIBS
+AC_MSG_WARN([libs pre: $LIBS])
+AC_SEARCH_LIBS([tputs], [ncurses curses tinfo], [
+  AS_IF([test x$ac_cv_search_func != "xnone required"],
+    [TERMCAPLIB=$ac_cv_search_func], [TERMCAPLIB=])
+  AC_SUBST([TERMCAPLIB])
+], [
+  AC_MSG_ERROR([Could not detect a library prividing tputs()])
+])
+LIBS=$_old_libs
 
 dnl Which compiler do we have here
 AC_ARG_VAR(COMPILERTYPE, [compiler profile to use from config/compilers. This

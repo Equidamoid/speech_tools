@@ -4117,13 +4117,15 @@ $as_echo "#define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
  esac
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tputs in -lncurses" >&5
-$as_echo_n "checking for tputs in -lncurses... " >&6; }
-if ${ac_cv_lib_ncurses_tputs+:} false; then :
+_old_libs=$LIBS
+{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: libs pre: $LIBS" >&5
+$as_echo "$as_me: WARNING: libs pre: $LIBS" >&2;}
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing tputs" >&5
+$as_echo_n "checking for library containing tputs... " >&6; }
+if ${ac_cv_search_tputs+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lncurses  $LIBS"
+  ac_func_search_save_LIBS=$LIBS
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -4142,24 +4144,50 @@ return tputs ();
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_ncurses_tputs=yes
-else
-  ac_cv_lib_ncurses_tputs=no
+for ac_lib in '' ncurses curses tinfo; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_search_tputs=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
+    conftest$ac_exeext
+  if ${ac_cv_search_tputs+:} false; then :
+  break
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ncurses_tputs" >&5
-$as_echo "$ac_cv_lib_ncurses_tputs" >&6; }
-if test "x$ac_cv_lib_ncurses_tputs" = xyes; then :
-  TERMCAPLIB=-lncurses
+done
+if ${ac_cv_search_tputs+:} false; then :
+
 else
-  TERMCAPLIB=-lcurses
+  ac_cv_search_tputs=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_tputs" >&5
+$as_echo "$ac_cv_search_tputs" >&6; }
+ac_res=$ac_cv_search_tputs
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+
+  if test x$ac_cv_search_func != "xnone required"; then :
+  TERMCAPLIB=$ac_cv_search_func
+else
+  TERMCAPLIB=
 fi
 
 
+else
+
+  as_fn_error $? "Could not detect a library prividing tputs()" "$LINENO" 5
+
+fi
+
+LIBS=$_old_libs
 
 
 if test "x${COMPILERTYPE}" = "x"; then
